@@ -10,6 +10,8 @@ provider:
   environment:
     DYNAMODB_TABLE: ${self:service}-${self:provider.stage}
     SENTRY_URI: ${env:SENTRY_URI}
+    TWITTER_KEY: ${env:TWITTER_KEY}
+    TWITTER_SECRET: ${env:TWITTER_SECRET}
   iamRoleStatements:
     - Effect: Allow
       Action:
