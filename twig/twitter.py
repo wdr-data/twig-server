@@ -47,7 +47,7 @@ def status(id):
     def api_call(bearer):
         return requests.get(
             "https://api.twitter.com/1.1/statuses/show.json",
-            params={"id": id,},
+            params={"id": id, "tweet_mode": "extended",},
             headers={"Authorization": f"Bearer {bearer}"},
         )
 
