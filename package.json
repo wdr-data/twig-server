@@ -1,0 +1,11 @@
+{
+  "name": "wdrtwig-server",
+  "version": "1.0.0",
+  "description": "Get tweets",
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "serverless": "^1.71.3",
+    "serverless-python-requirements": "^5.1.0"
+  }
+}

@@ -1,0 +1,65 @@
+service: wdrtwig-server
+
+frameworkVersion: ">=1.1.0 <2.0.0"
+
+provider:
+  name: aws
+  region: eu-central-1
+  runtime: python3.8
+  stage: ${env:STAGE}
+  environment:
+    DYNAMODB_TABLE: ${self:service}-${self:provider.stage}
+    SENTRY_URI: ${env:SENTRY_URI}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
+
+functions:
+  status:
+    handler: src/handler.status
+    events:
+      - http:
+          path: status/{id}
+          method: get
+          cors: true
+
+resources:
+  Resources:
+    StateDynamoDbTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Retain
+      Properties:
+        TableName: ${self:provider.environment.DYNAMODB_TABLE}
+        AttributeDefinitions:
+          -
+            AttributeName: name
+            AttributeType: S
+        KeySchema:
+          -
+            AttributeName: name
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+
+plugins:
+  - serverless-python-requirements
+
+custom:
+  pythonRequirements:
+    slim: true
+    noDeploy:
+      - rope
+      - docutils
+
+package:
+  exclude:
+    - node_modules/**
+    - venv/**
