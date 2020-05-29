@@ -18,7 +18,7 @@ def status(event, context):
     # Check request origin and set CORS header accordingly
     headers = {}
 
-    allowed_origins = ["^https?://localhost(:\d+)?$", "^https://wdrtwig.netlify.app$"]
+    allowed_origins = [r"^https?://localhost(:\d+)?$", r"^https://wdrtwig.netlify.app$"]
     origin = event["headers"].get("origin")
 
     if not origin:
